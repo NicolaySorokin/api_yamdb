@@ -5,13 +5,22 @@ from django.forms import ValidationError
 from django.shortcuts import get_object_or_404
 from rest_framework import serializers
 
-from reviews.models import Category, Comment, Genre, Review, Title
-from users.constants import (
-    MAX_LENGTH_EMAIL,
-    MAX_LENGTH_NAME
-)
+from reviews.models import Comment, Review, Title
 from users.models import User
-from users.validators import validate_username
+
+
+NOT_ALLOWED_NAMES = ('me',)
+MAX_LENGTH_NAME = 150
+MAX_LENGTH_EMAIL = 254
+MAX_LENGTH_ROLE = 16
+
+
+def validate_username(username):
+    if username.lower() in NOT_ALLOWED_NAMES:
+        raise ValidationError(
+            f'Зарезервированный логин {username}, нельзя использолвать'
+        )
+    return username
 
 
 class SignUpSerializer(serializers.Serializer):
@@ -64,7 +73,6 @@ class CategorySerializer(serializers.ModelSerializer):
     """Преобразователь запросов по категориям."""
 
     class Meta:
-        model = Category
         fields = (
             'name',
             'slug',
@@ -75,7 +83,6 @@ class GenreSerializer(serializers.ModelSerializer):
     """Преобразователь запросов по жанрам."""
 
     class Meta:
-        model = Genre
         fields = (
             'name',
             'slug',
@@ -115,12 +122,10 @@ class TitleWriteSerializer(serializers.ModelSerializer):
     """
 
     category = serializers.SlugRelatedField(
-        slug_field='slug',
-        queryset=Category.objects.all()
+        slug_field='slug'
     )
     genre = serializers.SlugRelatedField(
         slug_field='slug',
-        queryset=Genre.objects.all(),
         many=True
     )
 
