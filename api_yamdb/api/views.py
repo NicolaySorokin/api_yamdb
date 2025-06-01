@@ -1,10 +1,9 @@
-from django.shortcuts import get_object_or_404
 from django.conf import settings
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
 from django.db.models import Avg
 from django_filters.rest_framework import DjangoFilterBackend
-
+from django.shortcuts import get_object_or_404
 from rest_framework import filters, mixins, status, viewsets
 from rest_framework.decorators import action, api_view
 from rest_framework.filters import SearchFilter
@@ -16,8 +15,6 @@ from rest_framework.permissions import (
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import AccessToken
 
-from reviews.models import Category, Genre, Review, Title
-from users.models import User
 from .filters import TitlesFilter
 from .permissions import (
     IsAdmin,
@@ -35,13 +32,15 @@ from .serializers import (
     TokenSerializer,
     UserSerializer
 )
+from api_yamdb.api_yamdb.users.models import User
+from reviews.models import Review, Title
 
 
 @api_view(['POST'])
 def signup(request):
     """
-    Этот эндпоинт api/v1/auth/signup генерирует и отправляет.
-    Код подтверждения на email пользователя при регистрации.
+    Позволяет получить код подтверждения на переданный email.
+    Обрабатывает запрос для эндпоинта api/v1/auth/signup.
     """
     serializer = SignUpSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
@@ -61,8 +60,7 @@ def signup(request):
 @api_view(['POST'])
 def get_token(request):
     """
-    Эндпоинт api/v1/auth/token обменивает username и.
-    Сonfirmation code на JWT-токен для авторизации.
+    Позволяет получть JWT-токен в обмен на username и confirmation code.
     """
     serializer = TokenSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
@@ -76,7 +74,7 @@ def get_token(request):
 
 class UserViewSet(viewsets.ModelViewSet):
     """
-    Обрабатывает запросы для эндпоинта api/v1/users/.
+    Обрабатывает все запросы для эндпоинта.
     """
 
     queryset = User.objects.all()
@@ -96,8 +94,7 @@ class UserViewSet(viewsets.ModelViewSet):
     )
     def user_own_account(self, request):
         """
-        Предоставляет пользователям доступ к управлению.
-        Их персональными данными через эндпоинт api/v1/me/.
+        Позволяет получить и изменить данные своей учетной записи.
         """
         serializer = UserSerializer(request.user)
         if request.method == 'PATCH':
@@ -130,25 +127,23 @@ class BaseCategoryGenreViewSet(
 
 class CategoryViewSet(BaseCategoryGenreViewSet):
     """
-    Контроллер для управления категориями через эндпоинт api/v1/categories/.
+    Позволяет получить список, создать или удалить категорию.
     """
 
-    queryset = Category.objects.all()
     serializer_class = CategorySerializer
 
 
 class GenreViewSet(BaseCategoryGenreViewSet):
     """
-    Контроллер для управления жанрами.
+    Выполняет все операции с жанрами.
     """
 
-    queryset = Genre.objects.all()
     serializer_class = GenreSerializer
 
 
 class TitlesViewSet(viewsets.ModelViewSet):
     """
-    Контроллер для управления произведениями.
+    Выполняет все операции с произведениями.
     """
 
     permission_classes = (IsAdminOrReadOnly,)
@@ -167,7 +162,7 @@ class TitlesViewSet(viewsets.ModelViewSet):
 
 class ReviewViewSet(viewsets.ModelViewSet):
     """
-    Обработчик реализует полный цикл операций с отзывами на произведения.
+    Выполняет все операции с отзывами.
     """
 
     permission_classes = (
@@ -190,7 +185,7 @@ class ReviewViewSet(viewsets.ModelViewSet):
 
 class CommentViewSet(viewsets.ModelViewSet):
     """
-    Обработчик обеспечивает полный цикл работы с комментариями к отзывам.
+    Выполняет все операции с комментариями.
     """
 
     permission_classes = (
