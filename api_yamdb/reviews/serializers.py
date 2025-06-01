@@ -39,7 +39,7 @@ class ReviewSerializer(serializers.ModelSerializer):
             title = Title.objects.get(pk=title_id)
         except Title.DoesNotExist:
             raise serializers.ValidationError('Публикации не существует')
-        author = UserTest.objects.get(id=1)  # Для отладки, потом поменять.
+        author = UserTest.objects.get(id=2)  # Для отладки, потом поменять.
 
         if request.method == 'POST':
             if Review.objects.filter(title=title, author=author).exists():
