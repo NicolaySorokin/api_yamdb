@@ -1,6 +1,12 @@
 from datetime import timedelta
 import os
 from pathlib import Path
+import os
+
+from django.utils import timezone
+
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 from dotenv import load_dotenv
 
@@ -77,6 +83,7 @@ DATABASES = {
     }
 }
 
+AUTH_USER_MODEL = 'users.User'
 
 # Password validation
 
@@ -136,3 +143,4 @@ SIMPLE_JWT = {
 EMAIL_HOST = 'admin@yamdb.ru'
 EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
 EMAIL_FILE_PATH = os.path.join(BASE_DIR, 'sent_emails')
+

@@ -9,14 +9,18 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from .serializers import SignupSerializer, TokenSerializer, UserSerializer
+
 from api.permissions import IsAdmin
+
 
 User = get_user_model()
 
 
 class SignupView(APIView):
     """POST /api/v1/auth/signup/"""
+    
     permission_classes = ()
+
 
     def post(self, request):
         serializer = SignupSerializer(data=request.data)
@@ -46,7 +50,9 @@ class SignupView(APIView):
 
 class TokenView(APIView):
     """POST /api/v1/auth/token/"""
+
     permission_classes = ()
+
 
     def post(self, request):
         serializer = TokenSerializer(data=request.data)
