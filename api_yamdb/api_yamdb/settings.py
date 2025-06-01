@@ -1,4 +1,10 @@
 from pathlib import Path
+import os
+
+from django.utils import timezone
+
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,6 +27,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'users',
+    'reviews',
 ]
 
 MIDDLEWARE = [
@@ -32,6 +40,16 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.SessionAuthentication',
+        'users.authentication.JWTAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
+    ),
+}
 
 ROOT_URLCONF = 'api_yamdb.urls'
 
@@ -64,6 +82,7 @@ DATABASES = {
     }
 }
 
+AUTH_USER_MODEL = 'users.User'
 
 # Password validation
 
@@ -101,3 +120,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = ((BASE_DIR / 'static/'),)
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
+DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', 'webmaster@localhost')
