@@ -32,7 +32,7 @@ from .serializers import (
     TokenSerializer,
     UserSerializer
 )
-from api_yamdb.api_yamdb.users.models import User
+from users.models import User
 from reviews.models import Review, Title
 
 

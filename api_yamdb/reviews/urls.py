@@ -1,14 +1,8 @@
-from django.urls import include, path
-from rest_framework import routers
+from django.urls import path
 
-from reviews.views import (CommentViewSet, ReviewViewSet, TitleViewSet,
-                           UserTestViewSet)
-
-router = routers.DefaultRouter()
-router.register('title', TitleViewSet, basename='title')
+from reviews.views import CommentViewSet, ReviewViewSet
 
 urlpatterns = [
-    path('v1/', include(router.urls)),
     path('v1/title/<int:title_id>/reviews/', ReviewViewSet.as_view({
         'get': 'list',
         'post': 'create',
@@ -30,8 +24,4 @@ urlpatterns = [
              'patch': 'partial_update',
              'delete': 'destroy',
          }), name='comment-detail'),
-    path('v1/users/', UserTestViewSet.as_view({
-        'get': 'list',
-        'post': 'create',
-    }), name='user-list'),  # Для отладки, потом удалить.
 ]

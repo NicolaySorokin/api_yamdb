@@ -5,9 +5,8 @@ from django.forms import ValidationError
 from django.shortcuts import get_object_or_404
 from rest_framework import serializers
 
-from reviews.models import Comment, Review, Title
+from reviews.models import Category, Comment, Genre, Review, Title
 from users.models import User
-
 
 NOT_ALLOWED_NAMES = ('me',)
 MAX_LENGTH_NAME = 150
@@ -122,11 +121,13 @@ class TitleWriteSerializer(serializers.ModelSerializer):
     """
 
     category = serializers.SlugRelatedField(
-        slug_field='slug'
+        slug_field='slug',
+        queryset=Category.objects.all()
     )
     genre = serializers.SlugRelatedField(
         slug_field='slug',
-        many=True
+        many=True,
+        queryset=Genre.objects.all()
     )
 
     class Meta:

@@ -6,11 +6,6 @@ from reviews.serializers import (CommentSerializer, ReviewSerializer,
                                  TitleSerializer, UserTestSerializer)
 
 
-class TitleViewSet(viewsets.ModelViewSet):
-    queryset = Title.objects.all()
-    serializer_class = TitleSerializer
-
-
 class ReviewViewSet(viewsets.ModelViewSet):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
@@ -26,12 +21,6 @@ class ReviewViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         title = get_object_or_404(Title, id=self.get_title_id())
         serializer.save(title=title)
-
-
-# Для отладки, потом удалить.
-class UserTestViewSet(viewsets.ModelViewSet):
-    queryset = UserTest.objects.all()
-    serializer_class = UserTestSerializer
 
 
 class CommentViewSet(viewsets.ModelViewSet):
