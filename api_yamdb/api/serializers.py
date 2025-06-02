@@ -76,6 +76,7 @@ class CategorySerializer(serializers.ModelSerializer):
             'name',
             'slug',
         )
+        model = Category
 
 
 class GenreSerializer(serializers.ModelSerializer):
@@ -86,6 +87,7 @@ class GenreSerializer(serializers.ModelSerializer):
             'name',
             'slug',
         )
+        model = Genre
 
 
 class TitleReadSerializer(serializers.ModelSerializer):

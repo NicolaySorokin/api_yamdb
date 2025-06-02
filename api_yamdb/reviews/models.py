@@ -52,18 +52,10 @@ class Genre(CategoryGenreModel):
         verbose_name_plural = 'Жанры'
 
 
-# Модель для отладки, потом поменять.
-class UserTest(models.Model):
-    username = models.CharField(max_length=100)
-
-    def __str__(self):
-        return self.username
-
-
 class Title(models.Model):
     name = models.TextField(
         verbose_name='Название произведения',
-        max_length=50,
+        max_length=256,
         db_index=True
     )
     description = models.TextField(
@@ -124,10 +116,6 @@ class Review(ReviewCommentModel):
             MaxValueValidator(10)
         ]
     )
-
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-        self.title.update_rating()
 
     class Meta(ReviewCommentModel.Meta):
         default_related_name = 'reviews'

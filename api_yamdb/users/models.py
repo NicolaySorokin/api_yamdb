@@ -19,6 +19,7 @@ class User(AbstractUser):
         choices=ROLE_CHOICES,
         default=USER,
     )
+    bio = models.TextField(blank=True, null=True)
     confirmation_code = models.CharField(
         max_length=128,
         blank=True,
@@ -33,3 +34,10 @@ class User(AbstractUser):
     @property
     def is_moderator(self):
         return self.role == self.MODERATOR
+
+    def __str__(self):
+        return f'Email пользователя - {self.email}'
+
+    class Meta:
+        verbose_name = 'Пользователь'
+        verbose_name_plural = 'Пользователи'
