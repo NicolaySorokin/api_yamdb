@@ -3,6 +3,7 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.utils import timezone
 
+from reviews.constants import MAX_SYMBOLS, PREV_SYMBOLS
 from users.models import User
 
 
@@ -18,11 +19,10 @@ class CategoryGenreModel(models.Model):
 
     slug = models.SlugField(
         verbose_name='Cлаг',
-        max_length=50,
-        unique=True,
-        db_index=True
+        max_length=MAX_SYMBOLS,
+        unique=True
     )
-    name = models.TextField(
+    name = models.CharField(
         verbose_name='Название',
         max_length=256
     )
@@ -41,7 +41,7 @@ class Category(CategoryGenreModel):
     Одно произведение может быть привязано только к одной категории.
     """
 
-    class Meta:
+    class Meta(CategoryGenreModel.Meta):
         verbose_name = 'Категория'
         verbose_name_plural = 'Категории'
 
@@ -53,7 +53,7 @@ class Genre(CategoryGenreModel):
 
 
 class Title(models.Model):
-    name = models.TextField(
+    name = models.CharField(
         verbose_name='Название произведения',
         max_length=256,
         db_index=True
@@ -77,7 +77,6 @@ class Title(models.Model):
     genre = models.ManyToManyField(
         Genre,
         related_name='titles',
-        blank=False,
         verbose_name='Жанр'
     )
 
@@ -128,7 +127,7 @@ class Review(ReviewCommentModel):
         ]
 
     def __str__(self):
-        return self.text[:20]
+        return self.text[:PREV_SYMBOLS]
 
 
 class Comment(ReviewCommentModel):
