@@ -129,7 +129,8 @@ class TitleWriteSerializer(serializers.ModelSerializer):
     genre = serializers.SlugRelatedField(
         slug_field='slug',
         many=True,
-        queryset=Genre.objects.all()
+        queryset=Genre.objects.all(),
+        allow_empty=False
     )
 
     class Meta:
@@ -142,6 +143,11 @@ class TitleWriteSerializer(serializers.ModelSerializer):
             'category'
         )
         model = Title
+
+    def validate_genre(self, value):
+        if not value:
+            raise serializers.ValidationError("Укажите хотя бы один жанр.")
+        return value
 
 
 class ReviewSerializer(serializers.ModelSerializer):

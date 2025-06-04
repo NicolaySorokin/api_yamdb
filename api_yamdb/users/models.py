@@ -15,7 +15,7 @@ class User(AbstractUser):
 
     email = models.EmailField(unique=True, max_length=254)
     role = models.CharField(
-        max_length=10,
+        max_length=max(len(role) for role, _ in ROLE_CHOICES),
         choices=ROLE_CHOICES,
         default=USER,
     )
@@ -25,7 +25,12 @@ class User(AbstractUser):
         blank=True,
     )
 
-    REQUIRED_FIELDS = ['email']
+    class Meta:
+        verbose_name = 'Пользователь'
+        verbose_name_plural = 'Пользователи'
+
+    def __str__(self):
+        return f'Email пользователя - {self.email}'
 
     @property
     def is_admin(self):
@@ -34,10 +39,3 @@ class User(AbstractUser):
     @property
     def is_moderator(self):
         return self.role == self.MODERATOR
-
-    def __str__(self):
-        return f'Email пользователя - {self.email}'
-
-    class Meta:
-        verbose_name = 'Пользователь'
-        verbose_name_plural = 'Пользователи'
