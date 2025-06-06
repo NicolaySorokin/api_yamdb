@@ -1,6 +1,8 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
+from users.constants import EMAIL_MAX_SYMB, MAX_LEN_CODE
+
 
 class User(AbstractUser):
     USER = 'user'
@@ -13,7 +15,7 @@ class User(AbstractUser):
         (ADMIN, 'Admin'),
     ]
 
-    email = models.EmailField(unique=True, max_length=254)
+    email = models.EmailField(unique=True, max_length=EMAIL_MAX_SYMB)
     role = models.CharField(
         max_length=max(len(role) for role, _ in ROLE_CHOICES),
         choices=ROLE_CHOICES,
@@ -21,7 +23,7 @@ class User(AbstractUser):
     )
     bio = models.TextField(blank=True, null=True)
     confirmation_code = models.CharField(
-        max_length=128,
+        max_length=MAX_LEN_CODE,
         blank=True,
     )
 

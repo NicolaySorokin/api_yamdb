@@ -3,14 +3,15 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.utils import timezone
 
-from reviews.constants import MAX_SYMBOLS, PREV_SYMBOLS
+from reviews.constants import MAX_SYMBOLS, PREV_SYMBOLS, MAX_NAME_SYMB
 from users.models import User
 
 
 def validate_for_year(value):
-    if value > timezone.now().year:
+    year = timezone.now().year
+    if value > year:
         raise ValidationError(
-            (f'Год {value} позднее текущего {timezone.now().year}.')
+            (f'Год {value} позднее текущего {year}.')
         )
 
 
@@ -24,7 +25,7 @@ class CategoryGenreModel(models.Model):
     )
     name = models.CharField(
         verbose_name='Название',
-        max_length=256
+        max_length=MAX_NAME_SYMB
     )
 
     class Meta:
@@ -55,7 +56,7 @@ class Genre(CategoryGenreModel):
 class Title(models.Model):
     name = models.CharField(
         verbose_name='Название произведения',
-        max_length=256,
+        max_length=MAX_NAME_SYMB,
         db_index=True
     )
     description = models.TextField(
@@ -145,4 +146,4 @@ class Comment(ReviewCommentModel):
         verbose_name_plural = 'Комментарии'
 
     def __str__(self):
-        self.text[:20]
+        self.text[:PREV_SYMBOLS]
